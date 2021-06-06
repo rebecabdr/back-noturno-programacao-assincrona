@@ -8,14 +8,8 @@ const app = express();
 // letra A - sem id e sem nome
 
 app.get("/pokemon/", (req, res) => {
-    
-    const inicio = Number(req.query.offset);
-    const quantidade = Number(req.query.limit);
-    if (!req.query.offset || !req.query.limit){
-        res.json("É necessário inserir um valor inicial e a quantidade, favor revisar!")
-    } else {
-        getPokeList(inicio, quantidade).then((x) => res.json(x));
-    }
+
+        getPokeList(Number(req.query.offset), Number(req.query.limit)).then((x) => res.json(x));
 });
 
 async function getPokeList (offset, limit){
@@ -26,31 +20,36 @@ async function getPokeList (offset, limit){
 
 
 // letra B
-// async function getPokeIdName (idName){
-//     const promiseOrigin = await axios.get(` https://pokeapi.co/api/v2/pokemon/${idName}`);
-//     const {
-//         id,
-//         name,
-//         height,
-//         weight,
-//         base_experience,
-//         forms,
-//         abilities,
-//         species
-//     } = promiseOrigin.data;
 
-//     return {
-//         id,
-//         name,
-//         height,
-//         weight,
-//         base_experience,
-//         forms,
-//         abilities,
-//         species
-//     }
-// };
+app.get("/pokemon/:id", (req, res) => {
+    getPokeIdName(req.params.id).then((x) => res.json(x));
+});
 
-// getPokeIdName(1).then((x) => console.log(x));
+async function getPokeIdName (idName){
+    const promiseOrigin = await axios.get(` https://pokeapi.co/api/v2/pokemon/${idName}`);
+    const {
+        id,
+        name,
+        height,
+        weight,
+        base_experience,
+        forms,
+        abilities,
+        species
+    } = promiseOrigin.data;
+
+    return {
+        id,
+        name,
+        height,
+        weight,
+        base_experience,
+        forms,
+        abilities,
+        species
+    }
+};
+
+
 
 app.listen(8000);
